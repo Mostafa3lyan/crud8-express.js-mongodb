@@ -1,0 +1,73 @@
+1-
+db.createCollection("books", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title"],
+      properties: {
+        title: {
+          bsonType: "string"
+        }
+      }
+    }
+  }
+})
+
+2-
+db.authors.insertOne({
+name: "mostafa",
+age: 26,
+})
+3-
+db.createCollection("logs", {
+  capped: true,
+  size: 1048576,
+  max: 2
+})
+4-
+db.users.createIndex({ title: 1 })
+5-
+db.books.insertOne({
+title: "book1",
+author: "ali",
+year: 1987,
+genres: ["fantasy", "adventure"]
+})
+6-
+db.books.insertMany([
+  {
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    year: 1937,
+    genres: ["fantasy", "adventure"]
+  },
+  {
+    title: "future",
+    author: "George Orwell",
+    year: 1949,
+    genres: ["dystopian", "political"]
+  },
+  {
+    title: "Clean Code",
+    author: "Robert C. Martin",
+    year: 2008,
+    genres: ["programming", "software"]
+  }
+])
+7-
+db.logs.insertOne({
+  "book_id":"697f9895ca1a3de3ab7bd61e",
+  "action":"borrowed"
+})
+8-
+db.books.updateOne(
+  { title: "Future" },
+  { $set: { year: 2022 } }
+)
+9-
+db.books.findOne({ title: "Brave New World" })
+10-
+db.books.find({
+  year: { $gte: 1990, $lte: 2010 }
+})
+11-
