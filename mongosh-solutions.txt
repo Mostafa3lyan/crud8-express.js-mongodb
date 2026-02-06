@@ -71,3 +71,75 @@ db.books.find({
   year: { $gte: 1990, $lte: 2010 }
 })
 11-
+db.books
+.find({genres:"Science Fiction"})
+12-
+db.books
+  .find({})
+  .skip(2)
+  .limit(3) 
+  .sort({ year: -1 })
+  13-
+  db.books.find({
+  year: { $type: "int" }
+})
+14-
+db.books.find({
+  genres: { $nin: ["Horror", "Science Fiction"] }
+})
+15-
+db.books.deleteMany({
+  year: { $lt: 2000 }
+})
+16-
+db.books.aggregate([
+  {
+    $match: {
+      year: { $gt: 2000 }
+    }
+  },
+  {
+    $sort: {
+      year: -1
+    }
+  }
+])
+17-
+db.books.aggregate([
+  {
+    $match: {
+      year: { $gt: 2000 }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      title: 1,
+      author: 1,
+      year: 1
+    }
+  }
+])
+18-
+db.books.aggregate([
+  { $unwind: "$genres" },
+  {
+    $project: {
+      _id: 0,
+      title: 1,
+      genres: 1
+    }
+  }
+])
+19-
+db.books.aggregate([
+  {
+    $lookup: {
+      from: "logs",
+      localField: "_id",
+      foreignField: "book_id",
+      as: "logs"
+    }
+  }
+])
+
