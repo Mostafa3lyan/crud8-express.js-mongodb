@@ -7,7 +7,6 @@ const envPath = {
     development: `.env.development`,
     production: `.env.production`,
 }
-console.log({ en: envPath[NODE_ENV] });
 
 
 config({ path: resolve(`./config/${envPath[NODE_ENV]}`) })
@@ -21,4 +20,3 @@ export const DB_NAME = process.env.DB_NAME
 
 
 export const SALT_ROUND = parseInt(process.env.SALT_ROUND ?? '10')
-console.log({SALT_ROUND});

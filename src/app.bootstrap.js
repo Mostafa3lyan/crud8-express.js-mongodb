@@ -1,8 +1,8 @@
 
 import { NODE_ENV, port } from '../config/config.service.js'
-import { globalErrorHandling } from './common/utils/index.js'
+import { ConflictException, ErrorException, globalErrorHandling, NotFoundException, successResponse } from './common/utils/index.js'
 import { authenticateDB } from './DB/connection.db.js'
-import { authRouter, userRouter } from './modules/index.js'
+import { authorRouter, authRouter, userRouter } from './modules/index.js'
 import express from 'express'
 
 async function bootstrap() {
@@ -15,6 +15,8 @@ async function bootstrap() {
     app.get('/', (req, res) => res.send('Hello World!'))
     app.use('/auth', authRouter)
     app.use('/user', userRouter)
+    app.use("/", authorRouter);
+
 
 
     //invalid routing
@@ -22,8 +24,14 @@ async function bootstrap() {
         return res.status(404).json({ message: "Invalid application routing" })
     })
 
+    //success response
+    app.use(successResponse);
+
     //error-handling
     app.use(globalErrorHandling)
+    app.use(ErrorException);
+    app.use(NotFoundException);
+    app.use(ConflictException);
     
     app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 }

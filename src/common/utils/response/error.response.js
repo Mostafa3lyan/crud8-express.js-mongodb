@@ -1,4 +1,4 @@
-import { NODE_ENV } from "../../../../config/config.service";
+import { NODE_ENV } from "../../../../config/config.service.js";
 
 export const globalErrorHandling = (error, req, res, next) => {
   const status = error.cause?.status ?? 500;
