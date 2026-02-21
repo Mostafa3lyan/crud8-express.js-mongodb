@@ -1,16 +1,24 @@
-import { Router } from 'express';
+import { Router } from "express";
 import { successResponse } from "../../common/utils/index.js";
-import { CreateBooksIndex } from './book.service.js';
+import { CreateBooksIndex, insertBook } from "./book.service.js";
 
-const router = Router()
+const router = Router();
 
-router.post("/collection/books/index", (req,res) => {
-  const result = CreateBooksIndex();
+router.post("/collection/books/index", async (req, res) => {
+  const result = await CreateBooksIndex();
   return successResponse({
     res,
     message: "Books index created",
-    data: result
+    data: result,
   });
-})
+});
+
+router.post("/books", async (req, res) => {
+  const result = await insertBook(req.body);
+  return successResponse({
+    res,
+    data: result,
+  });
+});
 
 export default router;

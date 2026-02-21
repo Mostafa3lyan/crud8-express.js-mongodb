@@ -25,7 +25,7 @@ db.createCollection("logs", {
   max: 2
 })
 4-
-db.users.createIndex({ title: 1 })
+db.books.createIndex({ title: 1 })
 5-
 db.books.insertOne({
 title: "book1",
