@@ -1,6 +1,6 @@
 import { db } from "../../DB/connection.db.js"
 
-export const createLog = async (inputs) => {
+export const createCappedLog = async (inputs) => {
   const result = await db.createCollection("logs", {
     capped: true,
     size: 1048576,

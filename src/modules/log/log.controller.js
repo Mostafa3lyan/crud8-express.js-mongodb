@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { createLog } from './log.service.js';
+import { createCappedLog } from "./log.service.js";
 import { successResponse } from "../../common/utils/index.js";
 
 const router = Router()
 
 router.post("/collection/logs/capped", (req,res) => {
-  const result = createLog()
+  const result = createCappedLog();
   return successResponse({
     res,
     message: "Logs capped collection created with 1MB size limit",

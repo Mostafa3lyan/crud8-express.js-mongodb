@@ -2,7 +2,7 @@
 import { NODE_ENV, port } from '../config/config.service.js'
 import { ConflictException, ErrorException, globalErrorHandling, NotFoundException, successResponse } from './common/utils/index.js'
 import { authenticateDB } from './DB/connection.db.js'
-import { authorRouter, authRouter, logRouter, userRouter } from './modules/index.js'
+import { authorRouter, authRouter, bookRouter, logRouter, userRouter } from './modules/index.js'
 import express from 'express'
 
 async function bootstrap() {
@@ -15,6 +15,7 @@ async function bootstrap() {
     app.get('/', (req, res) => res.send('Hello World!'))
     app.use('/auth', authRouter)
     app.use('/user', userRouter)
+    app.use("/", bookRouter);
     app.use("/", authorRouter);
     app.use("/", logRouter);
 
