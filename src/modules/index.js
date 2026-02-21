@@ -2,3 +2,5 @@ export * from './auth/index.js'
 export * from './user/index.js'
 export * from "./book/index.js";
 export * from "./author/index.js";
+export * from "./log/index.js";
+
