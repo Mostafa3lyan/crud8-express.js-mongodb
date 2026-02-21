@@ -69,3 +69,50 @@ export const findBooksByGenre = async (genre) => {
 
   return result;
 };
+
+export const findBooksWithSkipLimit = async () => {
+  const result = await db
+    .collection("books")
+    .find()
+    .sort({ year: -1 })
+    .skip(2)
+    .limit(3)
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "Book not found" });
+  }
+
+  return result;
+};
+
+export const findBooksByYearInteger = async () => {
+  const result = await db
+    .collection("books")
+    .find({
+      year: { $type: "int" },
+    })
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "No books found with integer year" });
+  }
+
+  return result;
+};
+
+export const findBooksExcludeGenres = async () => {
+  const result = await db
+    .collection("books")
+    .find({
+      genres: { $nin: ["Horror", "Science Fiction"] },
+    })
+    .toArray();
+
+  if (!result.length) {
+    throw new Error("No books found");
+  }
+
+  return result;
+};
+

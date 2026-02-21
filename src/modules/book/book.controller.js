@@ -5,6 +5,9 @@ import {
   findBookByTitle,
   findBooksByGenre,
   findBooksByYear,
+  findBooksByYearInteger,
+  findBooksExcludeGenres,
+  findBooksWithSkipLimit,
   insertBook,
   insertManyBooks,
   updateBook,
@@ -78,6 +81,45 @@ router.get("/books/genre", async (req, res, next) => {
     const { genre } = req.query;
 
     const result = await findBooksByGenre(genre);
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/skip-limit", async (req, res, next) => {
+  try {
+    const result = await findBooksWithSkipLimit();
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/year-integer", async (req, res, next) => {
+  try {
+    const result = await findBooksByYearInteger();
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/exclude-genres", async (req, res, next) => {
+  try {
+    const result = await findBooksExcludeGenres();
 
     return successResponse({
       res,
