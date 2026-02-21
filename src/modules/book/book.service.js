@@ -1,3 +1,4 @@
+import { NotFoundException } from "../../common/utils/index.js";
 import { db } from "../../DB/connection.db.js";
 
 export const CreateBooksIndex = async () => {
@@ -30,7 +31,40 @@ export const findBookByTitle = async (title) => {
   const result = await db.collection("books").findOne({ title });
 
   if (!result) {
-    throw new Error("Book not found");
+    throw NotFoundException({ message: "Book not found" });
+  }
+
+  return result;
+};
+
+export const findBooksByYear = async (from, to) => {
+  const result = await db
+    .collection("books")
+    .find({
+      year: {
+        $gte: Number(from),
+        $lte: Number(to),
+      },
+    })
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "No books found in this range" });
+  }
+
+  return result;
+};
+
+export const findBooksByGenre = async (genre) => {
+  const result = await db
+    .collection("books")
+    .find({
+      genres: { $in: [genre] },
+    })
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "No books found for this genre" });
   }
 
   return result;
