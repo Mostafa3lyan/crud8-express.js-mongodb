@@ -1,4 +1,4 @@
-import { db } from "../../DB/connection.db.js"
+import { db } from "../../DB/connection.db.js";
 
 export const createCappedLog = async (inputs) => {
   const result = await db.createCollection("logs", {
@@ -6,5 +6,11 @@ export const createCappedLog = async (inputs) => {
     size: 1048576,
     max: 2,
   });
-  return result
-}
+  return result;
+};
+
+export const insertLog = async (inputs) => {
+  const result = await db.collection("logs").insertOne(inputs);
+
+  return result;
+};

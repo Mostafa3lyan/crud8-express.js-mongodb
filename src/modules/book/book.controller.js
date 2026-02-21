@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { successResponse } from "../../common/utils/index.js";
-import { CreateBooksIndex, insertBook, insertManyBooks } from "./book.service.js";
+import { CreateBooksIndex, findBookByTitle, insertBook, insertManyBooks, updateBook } from "./book.service.js";
 
 const router = Router();
 
@@ -28,5 +28,29 @@ router.post("/books/batch", async (req, res) => {
     data: result,
   });
 });
+
+router.patch("/books/:title", async (req, res) => {
+  const result = await updateBook(req.params.title,req.body);
+  return successResponse({
+    res,
+    data: result,
+  });
+});
+
+router.get("/books/title", async (req, res, next) => {
+  try {
+    const result = await findBookByTitle(req.query.title);
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
 
 export default router;

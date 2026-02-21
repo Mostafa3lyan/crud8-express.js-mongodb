@@ -17,3 +17,21 @@ export const insertManyBooks = async (inputs) => {
 
   return result;
 };
+
+export const updateBook = async (title, inputs) => {
+  const result = await db
+    .collection("books")
+    .updateOne({ title }, { $set: inputs });
+
+  return result;
+};
+
+export const findBookByTitle = async (title) => {
+  const result = await db.collection("books").findOne({ title });
+
+  if (!result) {
+    throw new Error("Book not found");
+  }
+
+  return result;
+};
