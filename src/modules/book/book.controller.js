@@ -1,7 +1,12 @@
 import { Router } from "express";
 import { successResponse } from "../../common/utils/index.js";
 import {
+  aggregateBooks,
+  aggregateBooks2,
+  aggregateBooks3,
+  aggregateBooks4,
   CreateBooksIndex,
+  deleteBooksBeforeYear,
   findBookByTitle,
   findBooksByGenre,
   findBooksByYear,
@@ -120,6 +125,77 @@ router.get("/books/year-integer", async (req, res, next) => {
 router.get("/books/exclude-genres", async (req, res, next) => {
   try {
     const result = await findBooksExcludeGenres();
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/books/before-year", async (req, res, next) => {
+  try {
+    const { year } = req.query;
+
+    const result = await deleteBooksBeforeYear(year);
+
+    return successResponse({
+      res,
+      data: {
+        message: `All books published before ${year} deleted successfully`,
+        deletedCount: result.deletedCount,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/aggregate1", async (req, res, next) => {
+  try {
+    const result = await aggregateBooks();
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/aggregate2", async (req, res, next) => {
+  try {
+
+    const result = await aggregateBooks2();
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/aggregate3", async (req, res, next) => {
+  try {
+    const result = await aggregateBooks3();
+
+    return successResponse({
+      res,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/books/aggregate4", async (req, res, next) => {
+  try {
+    const result = await aggregateBooks4();
 
     return successResponse({
       res,

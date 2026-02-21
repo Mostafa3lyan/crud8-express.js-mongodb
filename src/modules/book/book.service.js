@@ -80,7 +80,7 @@ export const findBooksWithSkipLimit = async () => {
     .toArray();
 
   if (!result.length) {
-    throw NotFoundException({ message: "Book not found" });
+    throw NotFoundException({ message: "Books not found" });
   }
 
   return result;
@@ -110,9 +110,103 @@ export const findBooksExcludeGenres = async () => {
     .toArray();
 
   if (!result.length) {
-    throw new Error("No books found");
+    throw NotFoundException({
+      message:
+        "No books found with genres other than Horror and Science Fiction",
+    });
   }
 
   return result;
 };
 
+export const deleteBooksBeforeYear = async (year) => {
+  const result = await db.collection("books").deleteMany({
+    year: { $lt: Number(year) },
+  });
+
+  if (!result.deletedCount) {
+    throw NotFoundException({ message: "No books found before this year" });
+  }
+
+  return result;
+};
+
+export const aggregateBooks = async () => {
+  const result = await db
+    .collection("books")
+    .aggregate([{ $match: { year: { $gt: 2000 } } }, { $sort: { year: -1 } }])
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "No books found after 2000" });
+  }
+
+  return result;
+};
+
+export const aggregateBooks2 = async () => {
+  const result = await db
+    .collection("books")
+    .aggregate([
+      { $match: { year: { $gt: 2000 } } },
+      { $project: { title: 1, author: 1, year: 1, _id: 0 } },
+    ])
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: `No books found after 2000` });
+  }
+
+  return result;
+};
+
+export const aggregateBooks3 = async () => {
+  const result = await db
+    .collection("books")
+    .aggregate([
+      { $unwind: "$genres" },
+      { $project: { title: 1, genres: 1, _id: 0 } },
+    ])
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "No books found" });
+  }
+
+  return result;
+};
+
+export const aggregateBooks4 = async () => {
+  const result = await db
+    .collection("logs")
+    .aggregate([
+      {
+        $addFields: {
+          book_id: { $toObjectId: "$book_id" }, 
+        },
+      },
+      {
+        $lookup: {
+          from: "books",
+          localField: "book_id",
+          foreignField: "_id",
+          as: "book_details",
+          pipeline: [{ $project: { title: 1, author: 1, year: 1, _id: 0 } }],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          action: 1,
+          book_details: 1,
+        },
+      },
+    ])
+    .toArray();
+
+  if (!result.length) {
+    throw NotFoundException({ message: "No logs found" });
+  }
+
+  return result;
+};
